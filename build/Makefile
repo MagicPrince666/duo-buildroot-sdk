@@ -571,8 +571,8 @@ endif
 	# copy milkv overlay files
 ifeq ($(MV_VENDOR), milkv)
 	${Q}cp -arf $(TOP_DIR)/device/common/overlay/* $(BR_ROOTFS_DIR)/
-	${Q}cp -arf $(TOP_DIR)/device/$(MV_BOARD)/overlay/* $(BR_ROOTFS_DIR)/
 	${Q}cp -arf $(TOP_DIR)/device/common/br_overlay/* $(BR_ROOTFS_DIR)/
+	${Q}cp -arf $(TOP_DIR)/device/$(MV_BOARD)/overlay/* $(BR_ROOTFS_DIR)/
 	${Q}rm -rf $(BR_OVERLAY_DIR)
 endif
 	# strip

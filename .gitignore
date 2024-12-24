@@ -20,3 +20,5 @@ ncscope.*
 
 __pycache__
 .vscode
+buildroot-2021.05/dl/
+buildroot-2021.05/board/milkv/
