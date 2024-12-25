@@ -37,6 +37,10 @@
        clock-frequency = <100000>;
 };
 
+&ethernet0 {
+	local-mac-address = [a4 51 29 00 00 b0];
+};
+
 / {
 	model = "Milk-V Duo";
 };

@@ -3,7 +3,6 @@ config BR2_PACKAGE_KLIPPER3D
 	
 	select BR2_PACKAGE_LIBFFI
 	select BR2_PACKAGE_LIBUSB
-	select BR2_PACKAGE_LIBUSB_DEV
 	select BR2_PACKAGE_PYTHON3
 	select BR2_PACKAGE_PYTHON_PIP
 	select BR2_PACKAGE_PYTHON_CFFI
@@ -14,7 +13,6 @@ config BR2_PACKAGE_KLIPPER3D
 	select BR2_PACKAGE_PYTHON_MARKUPSAFE
 	select BR2_PACKAGE_STM32FLASH
 	select BR2_PACKAGE_BINUTILS
-	select BR2_PACKAGE_BINUTILS_TARGET
 	select BR2_PACKAGE_PKGCONF
 
 	help
@@ -28,7 +26,7 @@ if BR2_PACKAGE_KLIPPER3D
 
 config BR2_PACKAGE_KLIPPER3D_SRC_CONFIG
 	string "Klipper MCU kconfig file"
-	default "$(PWD)/package/klipper/klipper3d/klipper_default.config"
+	default "$(TOPDIR)/package/klipper/klipper3d/klipper_default.config"
 	help
 	  Provide a Klipper config file matching your 3D printing hardware or 
 	  run "make klipper3d-menuconfig".
