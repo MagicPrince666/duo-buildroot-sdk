@@ -1,6 +1,5 @@
 /dts-v1/;
 #include "cv180x_base_riscv.dtsi"
-#include "cv180x_asic_qfn.dtsi"
 #include "cv180x_asic_sd.dtsi"
 #include "cv180x_default_memmap.dtsi"
 
@@ -8,40 +7,110 @@
 	snsr-reset = <&portc 8 GPIO_ACTIVE_LOW>, <&portc 8 GPIO_ACTIVE_LOW>, <&portc 8 GPIO_ACTIVE_LOW>;
 };
 
-&spi2 {
-	status = "okay";
-
-	spidev@0 {
-		status = "okay";
-	};
-};
-
 &uart1 {
 	status = "okay";
 };
 
-&uart2 {
-	status = "okay";
-};
-
-&uart3 {
-	status = "okay";
-};
-
-&uart4 {
+&wifisd {
 	status = "okay";
 };
 
 &i2c1 {
-       status = "okay";
-       clock-frequency = <100000>;
+    status = "okay";
+    clock-frequency = <100000>;
 };
 
 &ethernet0 {
+	status = "okay";
 	local-mac-address = [a4 51 29 00 00 b0];
 };
 
 / {
 	model = "Milk-V Duo";
+
+	/delete-node/ spi0@04180000;
+	/delete-node/ spi1@04190000;
+	/delete-node/ spi2@041A0000;
+	/delete-node/ spi3@041B0000;
+
+	leds {
+		compatible = "gpio-leds";
+
+		status {
+			label = "status";
+			gpios = <&portc 24 GPIO_ACTIVE_HIGH>; /* PC24 */
+			linux,default-trigger = "heartbeat";
+		};
+	};
+
+	reg_vcc3v3: vcc3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v3";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+	};
+
+	backlight: backlight {
+		compatible = "gpio-backlight";
+		gpios = <&porta 26 GPIO_ACTIVE_HIGH>; // PA26
+		default-on;
+	};
+
+	wifi_pin {
+		compatible = "cvitek,wifi-pin";
+		poweron-gpio = <&porte 26 GPIO_ACTIVE_HIGH>;
+		wakeup-gpio = <&porte 25 GPIO_ACTIVE_HIGH>;
+	};
+
+	spi_gpio {
+		compatible = "spi-gpio";
+		status = "okay";
+		sck-gpios = <&porta 22 GPIO_ACTIVE_HIGH>;
+		mosi-gpios = <&porta 25 GPIO_ACTIVE_HIGH>;
+		miso-gpios = <&porta 23 GPIO_ACTIVE_HIGH>;
+		cs-gpios = <&porta 24 GPIO_ACTIVE_HIGH>, <&porta 14 GPIO_ACTIVE_HIGH>; // PA24 PA14
+		num-chipselects = <2>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		display@0 {
+			compatible = "ilitek,ili9341";
+			reg = <0>;
+			status = "okay";
+			spi-max-frequency = <20000000>;
+			rotation = <0>;
+			fps = <30>;
+			// spi-cpol;
+			// spi-cpha;
+			bgr;
+			buswidth = <8>;
+
+			dc-gpios = <&porta 27 GPIO_ACTIVE_HIGH>;
+			reset-gpios = <&porte 4 GPIO_ACTIVE_HIGH>;
+
+			debug = <0x0>;
+			backlight = <&backlight>;
+		};
+
+		tsc2046@1 {
+			reg = <1>;
+			compatible = "ti,tsc2046";
+			interrupt-parent = <&porta>;
+			interrupts = <15 IRQ_TYPE_EDGE_FALLING>;	//PA15
+			spi-max-frequency = <1000000>;
+			pendown-gpio = <&porta 15 GPIO_ACTIVE_HIGH>;
+			vcc-supply = <&reg_vcc3v3>;
+
+			ti,x-min = /bits/ 16 <0>;
+			ti,x-max = /bits/ 16 <320>;
+			ti,y-min = /bits/ 16 <0>;
+			ti,y-max = /bits/ 16 <240>;
+			ti,x-plate-ohms = /bits/ 16 <40>;
+			ti,pressure-max = /bits/ 16 <255>;
+
+			wakeup-source;
+			status = "okay";
+		};
+	};
 };
 
