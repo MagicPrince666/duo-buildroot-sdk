@@ -16,10 +16,10 @@ init_sys()
     fi
 
         mkdir -p /overlay/upper /overlay/work
-        mount -n -t overlay overlayfs:/overlay -o rw,noatime,lowerdir=/,upperdir=/overlay/upper,workdir=/overlay/work /mnt
+        mount -n -t overlay overlayfs:/overlay -o rw,noatime,lowerdir=/,upperdir=/overlay/upper,workdir=/overlay/work /media
 
-        mount -n /proc -o noatime,--move /mnt/proc
-        pivot_root /mnt /mnt/rom
+        mount -n /proc -o noatime,--move /media/proc
+        pivot_root /media /media/rom
         mount -n /rom/dev -o noatime,--move /dev
         mount -n /rom/dev/shm -o noatime,--move /dev/shm
         mount -n /rom/tmp -o noatime,--move /tmp

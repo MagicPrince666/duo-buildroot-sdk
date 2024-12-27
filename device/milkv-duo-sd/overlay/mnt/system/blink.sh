@@ -1,5 +1,7 @@
 #!/bin/sh
 
+exit 0
+
 LED_PIN=440
 
 LED_GPIO=/sys/class/gpio/gpio${LED_PIN}

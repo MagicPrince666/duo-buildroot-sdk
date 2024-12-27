@@ -18,7 +18,7 @@ DEFAULTS_FILE=/etc/default/klipper
 PIDFILE=/var/run/klipper.pid
 
 #. /lib/lsb/init-functions
-
+exit 0
 # Read defaults file
 [ -r $DEFAULTS_FILE ] && . $DEFAULTS_FILE
 
