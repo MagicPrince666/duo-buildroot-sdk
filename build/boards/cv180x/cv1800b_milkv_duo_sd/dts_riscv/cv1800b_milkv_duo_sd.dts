@@ -35,11 +35,13 @@
 
 	leds {
 		compatible = "gpio-leds";
+		status = "okay";
 
 		status {
 			label = "status";
 			gpios = <&portc 24 GPIO_ACTIVE_HIGH>; /* PC24 */
 			linux,default-trigger = "heartbeat";
+			status = "okay";
 		};
 	};
 
@@ -77,8 +79,8 @@
 			compatible = "ilitek,ili9341";
 			reg = <0>;
 			status = "okay";
-			spi-max-frequency = <20000000>;
-			rotation = <0>;
+			spi-max-frequency = <4000000>;
+			rotation = <90>;
 			fps = <30>;
 			// spi-cpol;
 			// spi-cpha;
