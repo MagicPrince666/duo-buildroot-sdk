@@ -5,6 +5,11 @@
 
 BLOCK=/dev/mmcblk0p4
 
+# emmc分区和sd分区不同
+if [ -e "/dev/mmcblk0rpmb" ]; then
+    BLOCK=/dev/mmcblk0p5
+fi
+
 init_sys()
 {
     mount -n -t ext4 $BLOCK -o rw,noatime /overlay
@@ -31,7 +36,3 @@ init_sys()
 }
 
 init_sys
-
-
-
-
