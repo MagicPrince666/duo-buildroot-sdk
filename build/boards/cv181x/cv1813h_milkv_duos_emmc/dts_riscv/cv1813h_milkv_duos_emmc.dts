@@ -59,7 +59,7 @@
 			buswidth = <8>;
 
 			dc-gpios = <&porta 28 GPIO_ACTIVE_HIGH>;
-			// reset-gpios = <&porte 4 GPIO_ACTIVE_HIGH>;
+			reset-gpios = <&porta 18 GPIO_ACTIVE_HIGH>;
 
 			debug = <0x0>;
 			backlight = <&backlight>;
