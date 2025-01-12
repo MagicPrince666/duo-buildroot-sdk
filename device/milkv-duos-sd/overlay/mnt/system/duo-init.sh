@@ -18,12 +18,12 @@ function set_gpio()
 }
 
 # Hardware V1.1
-gpio_b17=465
-set_gpio ${gpio_b17} 0
+# gpio_b17=465
+# set_gpio ${gpio_b17} 0
 
 # Host Wake BT
-host_wake_bt=362
-set_gpio ${host_wake_bt} 1
+# host_wake_bt=362
+# set_gpio ${host_wake_bt} 1
 
 # WIFI/BT Module
 insmod /mnt/system/ko/aic8800_bsp.ko
