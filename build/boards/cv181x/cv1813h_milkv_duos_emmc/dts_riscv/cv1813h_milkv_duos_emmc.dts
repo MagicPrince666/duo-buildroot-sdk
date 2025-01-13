@@ -8,6 +8,11 @@
 	snsr-reset = <&porta 2 GPIO_ACTIVE_LOW>, <&porta 2 GPIO_ACTIVE_LOW>, <&porta 2 GPIO_ACTIVE_LOW>;
 };
 
+&ethernet0 {
+	status = "okay";
+	local-mac-address = [a4 51 29 00 00 b0];
+};
+
 &dac{
 	/delete-property/ mute-gpio-l;
 	/delete-property/ mute-gpio-r;
@@ -18,11 +23,11 @@
 };
 
 &i2c1 {
-	status = "okay";
+	status = "disabled";
 };
 
 &i2c2 {
-	status = "okay";
+	status = "disabled";
 };
 
 &i2c3 {
@@ -45,45 +50,50 @@
 	status = "okay";
 	cs-gpios = <&portb 16 GPIO_ACTIVE_HIGH>, <&portb 18 GPIO_ACTIVE_HIGH>; // PB16 PB18
 	num-chipselects = <2>;
+	num-cs = <2>;
+
+	spidev@0 {
+		status = "disabled";
+	};
 
 	display@0 {
-			compatible = "ilitek,ili9341";
-			reg = <0>;
-			status = "okay";
-			spi-max-frequency = <50000000>;
-			rotation = <90>;
-			fps = <30>;
-			// spi-cpol;
-			// spi-cpha;
-			bgr;
-			buswidth = <8>;
+		compatible = "ilitek,ili9341";
+		reg = <0>;
+		status = "okay";
+		spi-max-frequency = <50000000>;
+		rotation = <90>;
+		fps = <30>;
+		// spi-cpol;
+		// spi-cpha;
+		bgr;
+		buswidth = <8>;
 
-			dc-gpios = <&porta 28 GPIO_ACTIVE_HIGH>;
-			reset-gpios = <&porta 18 GPIO_ACTIVE_HIGH>;
+		dc-gpios = <&porta 28 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&porta 18 GPIO_ACTIVE_HIGH>;
 
-			debug = <0x0>;
-			backlight = <&backlight>;
-		};
+		debug = <0x0>;
+		backlight = <&backlight>;
+	};
 
-		tsc2046@1 {
-			reg = <1>;
-			compatible = "ti,tsc2046";
-			interrupt-parent = <&portb>;
-			interrupts = <22 IRQ_TYPE_EDGE_FALLING>;	// PB22
-			spi-max-frequency = <1000000>;
-			pendown-gpio = <&portb 22 GPIO_ACTIVE_HIGH>;
-			vcc-supply = <&reg_vcc3v3>;
+	tsc2046@1 {
+		reg = <1>;
+		compatible = "ti,tsc2046";
+		interrupt-parent = <&portb>;
+		interrupts = <22 IRQ_TYPE_EDGE_FALLING>;	// PB22
+		spi-max-frequency = <1000000>;
+		pendown-gpio = <&portb 22 GPIO_ACTIVE_HIGH>;
+		vcc-supply = <&reg_vcc3v3>;
 
-			ti,x-min = /bits/ 16 <0>;
-			ti,x-max = /bits/ 16 <320>;
-			ti,y-min = /bits/ 16 <0>;
-			ti,y-max = /bits/ 16 <240>;
-			ti,x-plate-ohms = /bits/ 16 <40>;
-			ti,pressure-max = /bits/ 16 <255>;
+		ti,x-min = /bits/ 16 <0>;
+		ti,x-max = /bits/ 16 <320>;
+		ti,y-min = /bits/ 16 <0>;
+		ti,y-max = /bits/ 16 <240>;
+		ti,x-plate-ohms = /bits/ 16 <40>;
+		ti,pressure-max = /bits/ 16 <255>;
 
-			wakeup-source;
-			status = "okay";
-		};
+		wakeup-source;
+		status = "okay";
+	};
 };
 
 &usb {
@@ -146,6 +156,8 @@
 
 / {
 	model = "Milk-V DuoS EMMC";
+
+	// /delete-node/ spi3@041B0000/spidev@0;
 
 	leds {
 		compatible = "gpio-leds";

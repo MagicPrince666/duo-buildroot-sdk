@@ -16,7 +16,7 @@ void uart_init(void)
 	/* set uart to pinmux_uart1 */
 	//pinmux_config(PINMUX_UART0);
 
-	hal_uart_init(UART0, baudrate, uart_clock);
+	hal_uart_init(UART1, baudrate, uart_clock);
 }
 
 uint8_t uart_putc(uint8_t ch)

@@ -17,6 +17,7 @@
 #include "cvi_spinlock.h"
 #include "delay.h"
 #include "mmio.h"
+#include <stdio.h>
 #else
 #include <linux/time.h>
 #include <linux/uaccess.h>

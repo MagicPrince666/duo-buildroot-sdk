@@ -4,5 +4,5 @@
 
 void pinmux_init(void)
 {
-
+    hal_pinmux_config(PINMUX_UART0);
 }

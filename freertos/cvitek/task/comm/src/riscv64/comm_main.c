@@ -106,8 +106,12 @@ void main_cvirtos(void)
     a privileged mode (not user mode). */
     printf("cvi task end\n");
 	
+	uint32_t i = 0;
 	for (;;)
-        ;
+	{
+		printf("cvi task test %d\n", i++);
+		vTaskDelay(500 / portTICK_PERIOD_MS);
+	}
 }
 
 void prvCmdQuRunTask(void *pvParameters)
