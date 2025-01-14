@@ -10,7 +10,7 @@
 
 &ethernet0 {
 	status = "okay";
-	local-mac-address = [a4 51 29 00 00 b0];
+	local-mac-address = [a4 51 29 00 00 b1];
 };
 
 &dac{
@@ -18,16 +18,8 @@
 	/delete-property/ mute-gpio-r;
 };
 
-&i2c0 {
-	status = "disabled";
-};
-
-&i2c1 {
-	status = "disabled";
-};
-
 &i2c2 {
-	status = "disabled";
+	status = "okay";
 };
 
 &i2c3 {
@@ -37,24 +29,20 @@
 &i2c4 {
 	status = "okay";
 
-	gt9xx: gt9xx@14 {
-		compatible = "goodix,gt9xx";
-		reg = <0x14>;
-		goodix,irq-gpio = <&porta 20 0>;
-		goodix,rst-gpio = <&porta 19 GPIO_ACTIVE_HIGH>;
+	gt9xx: gt9xx@5d {
+		compatible = "goodix,gt911";
+		reg = <0x5d>;
+		irq-gpios = <&porta 20 IRQ_TYPE_LEVEL_LOW>;
+		reset-gpios = <&porta 19 GPIO_ACTIVE_HIGH>;
 		status = "okay";
 	};
 };
 
 &spi3 {
 	status = "okay";
-	cs-gpios = <&portb 16 GPIO_ACTIVE_HIGH>, <&portb 18 GPIO_ACTIVE_HIGH>; // PB16 PB18
-	num-chipselects = <2>;
 	num-cs = <2>;
-
-	spidev@0 {
-		status = "disabled";
-	};
+	cs-gpios = <&portb 16 GPIO_ACTIVE_HIGH>, <&portb 18 GPIO_ACTIVE_HIGH>; // PB16 PB18
+	rx-sample-delay-ns = <3>;
 
 	display@0 {
 		compatible = "ilitek,ili9341";
@@ -139,25 +127,33 @@
 /* mipi dsi for u-boot */
 &vo {
 	compatible = "cvitek,vo";
-	reset-gpio = <&porte 2 GPIO_ACTIVE_LOW>;
+	reset-gpio = <&portb 2 GPIO_ACTIVE_LOW>;
 	pwm-gpio = <&porte 0 GPIO_ACTIVE_HIGH>;
-	power-gpio = <&porte 1 GPIO_ACTIVE_HIGH>;
+	// power-gpio = <&portb 1 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 };
 
 /* mipi dsi for kernel */
 &mipi_tx {
 	compatible = "cvitek,mipi_tx";
-	reset-gpio = <&porte 2 GPIO_ACTIVE_LOW>;
+	reset-gpio = <&portb 2 GPIO_ACTIVE_LOW>;
 	pwm-gpio = <&porte 0 GPIO_ACTIVE_HIGH>;
-	power-ct-gpio = <&porte 1 GPIO_ACTIVE_HIGH>;
+	power-ct-gpio = <&portb 1 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 };
 
 / {
 	model = "Milk-V DuoS EMMC";
 
-	// /delete-node/ spi3@041B0000/spidev@0;
+	/delete-node/ spi0@04180000;
+	/delete-node/ spi1@04190000;
+	/delete-node/ spi2@041A0000;
+	/delete-node/ i2c0@04000000;
+	/delete-node/ i2c1@04010000;
+
+	aliases {
+		spi3 = &spi3;
+	};
 
 	leds {
 		compatible = "gpio-leds";
@@ -168,6 +164,36 @@
 			gpios = <&porta 29 GPIO_ACTIVE_HIGH>; /* PA29 */
 			linux,default-trigger = "heartbeat";
 			status = "okay";
+		};
+	};
+
+	gpio_keys {
+		compatible = "gpio-keys";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		button@0 {
+			debounce-interval = <50>;
+			wakeup-source;
+			linux,code = <115>;
+			label = "KEY0";
+			gpios = <&portb 3 GPIO_ACTIVE_LOW>;
+		};
+
+		button@1 {
+			debounce-interval = <50>;
+			wakeup-source;
+			linux,code = <116>;
+			label = "KEY1";
+			gpios = <&porte 2 GPIO_ACTIVE_LOW>;
+		};
+
+		button@2 {
+			debounce-interval = <50>;
+			wakeup-source;
+			linux,code = <117>;
+			label = "KEY2";
+			gpios = <&porte 1 GPIO_ACTIVE_LOW>;
 		};
 	};
 
@@ -188,5 +214,57 @@
 		compatible = "cvitek,bt-pin";
 		poweron-gpio = <&porte 10 GPIO_ACTIVE_HIGH>;
 	};
+/*
+	spi_gpio {
+		compatible = "spi-gpio";
+		status = "okay";
+		sck-gpios = <&portb 15 GPIO_ACTIVE_HIGH>;
+		mosi-gpios = <&portb 13 GPIO_ACTIVE_HIGH>;
+		miso-gpios = <&portb 14 GPIO_ACTIVE_HIGH>;
+		cs-gpios = <&portb 16 GPIO_ACTIVE_HIGH>, <&portb 18 GPIO_ACTIVE_HIGH>; // PB16 PB18
+		num-chipselects = <2>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		display@0 {
+			compatible = "ilitek,ili9341";
+			reg = <0>;
+			status = "okay";
+			spi-max-frequency = <4000000>;
+			rotation = <90>;
+			fps = <30>;
+			// spi-cpol;
+			// spi-cpha;
+			bgr;
+			buswidth = <8>;
+
+			dc-gpios = <&porta 28 GPIO_ACTIVE_HIGH>;
+			reset-gpios = <&porta 18 GPIO_ACTIVE_HIGH>;
+
+			debug = <0x0>;
+			backlight = <&backlight>;
+		};
+
+		tsc2046@1 {
+			reg = <1>;
+			compatible = "ti,tsc2046";
+			interrupt-parent = <&portb>;
+			interrupts = <22 IRQ_TYPE_EDGE_FALLING>;	// PB22
+			spi-max-frequency = <1000000>;
+			pendown-gpio = <&portb 22 GPIO_ACTIVE_HIGH>;
+			vcc-supply = <&reg_vcc3v3>;
+
+			ti,x-min = /bits/ 16 <0>;
+			ti,x-max = /bits/ 16 <320>;
+			ti,y-min = /bits/ 16 <0>;
+			ti,y-max = /bits/ 16 <240>;
+			ti,x-plate-ohms = /bits/ 16 <40>;
+			ti,pressure-max = /bits/ 16 <255>;
+
+			wakeup-source;
+			status = "okay";
+		};
+	};
+*/
 };
 

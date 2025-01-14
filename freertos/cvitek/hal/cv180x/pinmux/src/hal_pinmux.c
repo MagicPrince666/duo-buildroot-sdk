@@ -15,7 +15,7 @@ void hal_pinmux_config(int io_type)
 			PINMUX_CONFIG(UART0_RX, UART0_RX);
 			PINMUX_CONFIG(UART0_TX, UART0_TX);
 		break;
-		case PINMUX_UART0:
+		case PINMUX_UART1:
 			PINMUX_CONFIG(IIC0_SCL, UART1_TX);
 			PINMUX_CONFIG(IIC0_SDA, UART1_RX);
 		break;

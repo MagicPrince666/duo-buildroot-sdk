@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 static void set_rtc_register_for_power(void)
 {
 	printf("set_rtc_register_for_power\n");
@@ -13,12 +15,21 @@ int cvi_board_init(void)
 	PINMUX_CONFIG(PAD_MIPIRX4P, XGPIOC_3);
 	PINMUX_CONFIG(PAD_MIPIRX4N, XGPIOC_2);
 
+	// DSI
+	// PINMUX_CONFIG(PAD_MIPI_TXM4, MIPI_TXM4);
+	// PINMUX_CONFIG(PAD_MIPI_TXP4, MIPI_TXP4);
+	// PINMUX_CONFIG(PAD_MIPI_TXM3, MIPI_TXM3);
+	// PINMUX_CONFIG(PAD_MIPI_TXP3, MIPI_TXP3);
+	// PINMUX_CONFIG(PAD_MIPI_TXM2, MIPI_TXM2);
+	// PINMUX_CONFIG(PAD_MIPI_TXP2, MIPI_TXP2);
+	// PINMUX_CONFIG(PAD_MIPI_TXM1, MIPI_TXM1);
+	// PINMUX_CONFIG(PAD_MIPI_TXP1, MIPI_TXP1);
+	// PINMUX_CONFIG(PAD_MIPI_TXM0, MIPI_TXM0);
+	// PINMUX_CONFIG(PAD_MIPI_TXP0, MIPI_TXP0);
+
 	// I2C2 for Camera2
 	PINMUX_CONFIG(IIC2_SDA, IIC2_SDA);
 	PINMUX_CONFIG(IIC2_SCL, IIC2_SCL);
-
-	// LED
-	PINMUX_CONFIG(IIC0_SDA, XGPIOA_29);
 
 	// I2C4 for TP
 	PINMUX_CONFIG(VIVO_D1, IIC4_SCL);
@@ -26,10 +37,20 @@ int cvi_board_init(void)
 
 	// SPI3
 	PINMUX_CONFIG(VIVO_D8, SPI3_SDO);
+	// uint32_t val = mmio_read_32(0x03001C08) & ~BIT(3);
+	// mmio_write_32(0x03001C08, val | BIT(2));
 	PINMUX_CONFIG(VIVO_D7, SPI3_SDI);
+	// val = mmio_read_32(0x03001C0C) & ~BIT(3);
+	// mmio_write_32(0x03001C0C, val | BIT(2));
 	PINMUX_CONFIG(VIVO_D6, SPI3_SCK);
+	// val = mmio_read_32(0x03001C10) & ~BIT(3);
+	// mmio_write_32(0x03001C10, val | BIT(2));
 	PINMUX_CONFIG(VIVO_D5, XGPIOB_16);
+	// val = mmio_read_32(0x03001C14) & ~BIT(3);
+	// mmio_write_32(0x03001C14, val | BIT(2));
 	PINMUX_CONFIG(VIVO_D3, XGPIOB_18);
+	// val = mmio_read_32(0x03001C1C) & ~BIT(3);
+	// mmio_write_32(0x03001C1C, val | BIT(2));
 
 	// backlight
 	PINMUX_CONFIG(VIVO_D2, XGPIOB_19);
@@ -57,6 +78,9 @@ int cvi_board_init(void)
 	PINMUX_CONFIG(JTAG_CPU_TMS, XGPIOA_19); // ctp rst
 	PINMUX_CONFIG(JTAG_CPU_TRST, XGPIOA_20); // ctp int
 	PINMUX_CONFIG(IIC0_SCL, XGPIOA_28); // lcd dc
+
+	// LED
+	PINMUX_CONFIG(IIC0_SDA, XGPIOA_29);
 
 	PINMUX_CONFIG(ADC3, XGPIOB_1);
 	PINMUX_CONFIG(ADC2, XGPIOB_2);

@@ -3,7 +3,6 @@
 insmod /mnt/system/ko/gpio_backlight.ko
 insmod /mnt/system/ko/ads7846.ko
 insmod /mnt/system/ko/fb_ili9341.ko
-insmod /mnt/system/ko/8723ds.ko
 
 # Set Pin-29(GP22) to GPIO
 # devmem 0x0502707c 32 0x111
