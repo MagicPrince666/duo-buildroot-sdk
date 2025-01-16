@@ -42,22 +42,22 @@
 	status = "okay";
 	num-cs = <2>;
 	cs-gpios = <&portb 16 GPIO_ACTIVE_HIGH>, <&portb 18 GPIO_ACTIVE_HIGH>; // PB16 PB18
-	rx-sample-delay-ns = <3>;
+	/delete-node/ spidev@0;
 
 	display@0 {
 		compatible = "ilitek,ili9341";
 		reg = <0>;
 		status = "okay";
-		spi-max-frequency = <50000000>;
-		rotation = <90>;
+		spi-max-frequency = <48000000>;
+		rotation = <0>;
 		fps = <30>;
 		// spi-cpol;
 		// spi-cpha;
 		bgr;
 		buswidth = <8>;
 
-		dc-gpios = <&porta 28 GPIO_ACTIVE_HIGH>;
-		reset-gpios = <&porta 18 GPIO_ACTIVE_HIGH>;
+		dc = <&porta 28 GPIO_ACTIVE_HIGH>;
+		reset = <&porta 18 GPIO_ACTIVE_HIGH>;
 
 		debug = <0x0>;
 		backlight = <&backlight>;
@@ -108,16 +108,8 @@
 	wakeup-gpio = <&porte 7 GPIO_ACTIVE_HIGH>;
 };
 
-&uart1 {
-	status = "disabled";
-};
-
 &uart2 {
 	status = "okay";
-};
-
-&uart3 {
-	status = "disabled";
 };
 
 &uart4 {
@@ -150,6 +142,8 @@
 	/delete-node/ spi2@041A0000;
 	/delete-node/ i2c0@04000000;
 	/delete-node/ i2c1@04010000;
+	/delete-node/ uart1@04150000;
+	/delete-node/ uart3@04170000;
 
 	aliases {
 		spi3 = &spi3;
@@ -214,57 +208,5 @@
 		compatible = "cvitek,bt-pin";
 		poweron-gpio = <&porte 10 GPIO_ACTIVE_HIGH>;
 	};
-/*
-	spi_gpio {
-		compatible = "spi-gpio";
-		status = "okay";
-		sck-gpios = <&portb 15 GPIO_ACTIVE_HIGH>;
-		mosi-gpios = <&portb 13 GPIO_ACTIVE_HIGH>;
-		miso-gpios = <&portb 14 GPIO_ACTIVE_HIGH>;
-		cs-gpios = <&portb 16 GPIO_ACTIVE_HIGH>, <&portb 18 GPIO_ACTIVE_HIGH>; // PB16 PB18
-		num-chipselects = <2>;
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		display@0 {
-			compatible = "ilitek,ili9341";
-			reg = <0>;
-			status = "okay";
-			spi-max-frequency = <4000000>;
-			rotation = <90>;
-			fps = <30>;
-			// spi-cpol;
-			// spi-cpha;
-			bgr;
-			buswidth = <8>;
-
-			dc-gpios = <&porta 28 GPIO_ACTIVE_HIGH>;
-			reset-gpios = <&porta 18 GPIO_ACTIVE_HIGH>;
-
-			debug = <0x0>;
-			backlight = <&backlight>;
-		};
-
-		tsc2046@1 {
-			reg = <1>;
-			compatible = "ti,tsc2046";
-			interrupt-parent = <&portb>;
-			interrupts = <22 IRQ_TYPE_EDGE_FALLING>;	// PB22
-			spi-max-frequency = <1000000>;
-			pendown-gpio = <&portb 22 GPIO_ACTIVE_HIGH>;
-			vcc-supply = <&reg_vcc3v3>;
-
-			ti,x-min = /bits/ 16 <0>;
-			ti,x-max = /bits/ 16 <320>;
-			ti,y-min = /bits/ 16 <0>;
-			ti,y-max = /bits/ 16 <240>;
-			ti,x-plate-ohms = /bits/ 16 <40>;
-			ti,pressure-max = /bits/ 16 <255>;
-
-			wakeup-source;
-			status = "okay";
-		};
-	};
-*/
 };
 
