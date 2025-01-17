@@ -64,54 +64,71 @@
 		wakeup-gpio = <&porte 25 GPIO_ACTIVE_HIGH>;
 	};
 
+	mux: mux-controller {
+        compatible = "gpio-mux";
+        #mux-control-cells = <0>;
+
+        mux-gpios = <&porta 14 GPIO_ACTIVE_HIGH>;
+    };
+
 	spi_gpio {
 		compatible = "spi-gpio";
 		status = "okay";
 		sck-gpios = <&porta 22 GPIO_ACTIVE_HIGH>;
 		mosi-gpios = <&porta 25 GPIO_ACTIVE_HIGH>;
 		miso-gpios = <&porta 23 GPIO_ACTIVE_HIGH>;
-		cs-gpios = <&porta 24 GPIO_ACTIVE_HIGH>, <&porta 14 GPIO_ACTIVE_HIGH>; // PA24 PA14
-		num-chipselects = <2>;
+		num-cs = <1>;
+		cs-gpios = <&porta 24 GPIO_ACTIVE_HIGH>; // PA24 PA14
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		display@0 {
-			compatible = "ilitek,ili9341";
+		spimux@0 {
+			compatible = "spi-mux";
 			reg = <0>;
-			status = "okay";
-			spi-max-frequency = <4000000>;
-			rotation = <90>;
-			fps = <30>;
-			// spi-cpol;
-			// spi-cpha;
-			bgr;
-			buswidth = <8>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			spi-max-frequency = <5000000>;
 
-			dc-gpios = <&porta 27 GPIO_ACTIVE_HIGH>;
-			reset-gpios = <&porte 4 GPIO_ACTIVE_HIGH>;
+			mux-controls = <&mux>;
 
-			debug = <0x0>;
-			backlight = <&backlight>;
-		};
+			display@0 {
+				compatible = "ilitek,ili9341";
+				reg = <0>;
+				status = "okay";
+				spi-max-frequency = <4000000>;
+				rotation = <90>;
+				fps = <30>;
+				// spi-cpol;
+				// spi-cpha;
+				bgr;
+				buswidth = <8>;
 
-		tsc2046@1 {
-			reg = <1>;
-			compatible = "ti,tsc2046";
-			interrupt-parent = <&porta>;
-			interrupts = <15 IRQ_TYPE_EDGE_FALLING>;	//PA15
-			spi-max-frequency = <1000000>;
-			pendown-gpio = <&porta 15 GPIO_ACTIVE_HIGH>;
-			vcc-supply = <&reg_vcc3v3>;
+				dc = <&porta 27 GPIO_ACTIVE_HIGH>;
+				reset = <&porte 4 GPIO_ACTIVE_HIGH>;
 
-			ti,x-min = /bits/ 16 <0>;
-			ti,x-max = /bits/ 16 <320>;
-			ti,y-min = /bits/ 16 <0>;
-			ti,y-max = /bits/ 16 <240>;
-			ti,x-plate-ohms = /bits/ 16 <40>;
-			ti,pressure-max = /bits/ 16 <255>;
+				debug = <0x0>;
+				backlight = <&backlight>;
+			};
 
-			wakeup-source;
-			status = "okay";
+			tsc2046@1 {
+				reg = <1>;
+				compatible = "ti,tsc2046";
+				interrupt-parent = <&porta>;
+				interrupts = <15 IRQ_TYPE_EDGE_FALLING>;	//PA15
+				spi-max-frequency = <1000000>;
+				pendown-gpio = <&porta 15 GPIO_ACTIVE_HIGH>;
+				vcc-supply = <&reg_vcc3v3>;
+
+				ti,x-min = /bits/ 16 <0>;
+				ti,x-max = /bits/ 16 <320>;
+				ti,y-min = /bits/ 16 <0>;
+				ti,y-max = /bits/ 16 <240>;
+				ti,x-plate-ohms = /bits/ 16 <40>;
+				ti,pressure-max = /bits/ 16 <255>;
+
+				wakeup-source;
+				status = "okay";
+			};
 		};
 	};
 };
