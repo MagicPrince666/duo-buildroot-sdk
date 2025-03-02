@@ -45,63 +45,54 @@
 	status = "okay";
 	#address-cells = <1>;
 	#size-cells = <0>;
-
+	num-cs = <2>;
+	cs-gpios = <&portb 16 GPIO_ACTIVE_HIGH>, <&portb 18 GPIO_ACTIVE_HIGH>; // PB16 PB18
 	/delete-node/ spidev@0;
 
-	spimux@0 {
-		compatible = "spi-mux";
-		reg = <0>;
+	display@0 {
 		#address-cells = <1>;
 		#size-cells = <0>;
-		spi-max-frequency = <50000000>;
+		compatible = "ilitek,ili9341";
+		reg = <0>;
+		status = "okay";
+		spi-max-frequency = <48000000>;
+		rotation = <0>;
+		fps = <30>;
+		// spi-cpol;
+		// spi-cpha;
+		bgr;
+		buswidth = <8>;
 
-		mux-controls = <&mux>;
+		dc = <&porta 28 GPIO_ACTIVE_HIGH>;
+		reset = <&porta 18 GPIO_ACTIVE_HIGH>;
 
-		display@0 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			compatible = "ilitek,ili9341";
-			reg = <0>;
-			status = "okay";
-			spi-max-frequency = <48000000>;
-			rotation = <0>;
-			fps = <30>;
-			// spi-cpol;
-			// spi-cpha;
-			bgr;
-			buswidth = <8>;
+		debug = <0x0>;
+		backlight = <&backlight>;
+	};
 
-			dc = <&porta 28 GPIO_ACTIVE_HIGH>;
-			reset = <&porta 18 GPIO_ACTIVE_HIGH>;
+	tsc2046@1 {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg = <1>;
+		compatible = "ti,tsc2046";
+		interrupt-parent = <&portb>;
+		interrupts = <22 IRQ_TYPE_EDGE_FALLING>;	// PB22
+		spi-max-frequency = <1000000>;
+		pendown-gpio = <&portb 22 GPIO_ACTIVE_HIGH>;
+		vcc-supply = <&reg_vcc3v3>;
 
-			debug = <0x0>;
-			backlight = <&backlight>;
-		};
+		touchscreen-size-x = <240>;
+		touchscreen-size-y = <320>;
 
-		tsc2046@1 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			reg = <1>;
-			compatible = "ti,tsc2046";
-			interrupt-parent = <&portb>;
-			interrupts = <22 IRQ_TYPE_EDGE_FALLING>;	// PB22
-			spi-max-frequency = <1000000>;
-			pendown-gpio = <&portb 22 GPIO_ACTIVE_HIGH>;
-			vcc-supply = <&reg_vcc3v3>;
+		ti,x-min = /bits/ 16 <0>;
+		ti,x-max = /bits/ 16 <320>;
+		ti,y-min = /bits/ 16 <0>;
+		ti,y-max = /bits/ 16 <240>;
+		ti,x-plate-ohms = /bits/ 16 <40>;
+		ti,pressure-max = /bits/ 16 <255>;
 
-			touchscreen-size-x = <240>;
-			touchscreen-size-y = <320>;
-
-			ti,x-min = /bits/ 16 <0>;
-			ti,x-max = /bits/ 16 <320>;
-			ti,y-min = /bits/ 16 <0>;
-			ti,y-max = /bits/ 16 <240>;
-			ti,x-plate-ohms = /bits/ 16 <40>;
-			ti,pressure-max = /bits/ 16 <255>;
-
-			wakeup-source;
-			status = "okay";
-		};
+		wakeup-source;
+		status = "okay";
 	};
 };
 
@@ -229,12 +220,5 @@
 		compatible = "cvitek,bt-pin";
 		poweron-gpio = <&porte 10 GPIO_ACTIVE_HIGH>;
 	};
-
-	mux: mux-controller {
-        compatible = "gpio-mux";
-        #mux-control-cells = <0>;
-
-        mux-gpios = <&portb 18 GPIO_ACTIVE_HIGH>;
-    };
 };
 
