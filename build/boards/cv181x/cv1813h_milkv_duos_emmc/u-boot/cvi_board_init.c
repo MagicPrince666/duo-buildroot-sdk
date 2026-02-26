@@ -45,7 +45,7 @@ int cvi_board_init(void)
 	PINMUX_CONFIG(VIVO_D6, SPI3_SCK);
 	// val = mmio_read_32(0x03001C10) & ~BIT(3);
 	// mmio_write_32(0x03001C10, val | BIT(2));
-	PINMUX_CONFIG(VIVO_D5, XGPIOB_16);
+	PINMUX_CONFIG(VIVO_D5, SPI3_CS_X);
 	// val = mmio_read_32(0x03001C14) & ~BIT(3);
 	// mmio_write_32(0x03001C14, val | BIT(2));
 	PINMUX_CONFIG(VIVO_D3, XGPIOB_18);

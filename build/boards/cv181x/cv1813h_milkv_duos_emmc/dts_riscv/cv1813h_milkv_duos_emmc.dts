@@ -46,20 +46,16 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	num-cs = <2>;
-	cs-gpios = <&portb 16 GPIO_ACTIVE_HIGH>, <&portb 18 GPIO_ACTIVE_HIGH>; // PB16 PB18
+	cs-gpios = <&portb 16 GPIO_ACTIVE_LOW>, <&portb 18 GPIO_ACTIVE_LOW>; // PB18
 	/delete-node/ spidev@0;
 
 	display@0 {
-		#address-cells = <1>;
-		#size-cells = <0>;
 		compatible = "ilitek,ili9341";
 		reg = <0>;
 		status = "okay";
 		spi-max-frequency = <48000000>;
 		rotation = <0>;
 		fps = <30>;
-		// spi-cpol;
-		// spi-cpha;
 		bgr;
 		buswidth = <8>;
 
@@ -70,15 +66,13 @@
 		backlight = <&backlight>;
 	};
 
-	tsc2046@1 {
-		#address-cells = <1>;
-		#size-cells = <0>;
+	touch@1 {
 		reg = <1>;
-		compatible = "ti,tsc2046";
+		compatible = "ti,ads7843";
 		interrupt-parent = <&portb>;
 		interrupts = <22 IRQ_TYPE_EDGE_FALLING>;	// PB22
 		spi-max-frequency = <1000000>;
-		pendown-gpio = <&portb 22 GPIO_ACTIVE_HIGH>;
+		pendown-gpio = <&portb 22 GPIO_ACTIVE_LOW>;
 		vcc-supply = <&reg_vcc3v3>;
 
 		touchscreen-size-x = <240>;
